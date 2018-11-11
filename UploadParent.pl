@@ -52,10 +52,67 @@ sub Main {
             $upload->Upload("./output/data/proper_name.csv", 'proper_names');
         }
     }
+    if (ConstData::EXE_MARKET) {
+        $upload->DeleteSameResult('markets', $result_no, $generate_no);
+        $upload->Upload("./output/market/catalog_" . $result_no . "_" . $generate_no . ".csv", 'markets');
+    }
     if (ConstData::EXE_CHARA) {
         if (ConstData::EXE_CHARA_NAME) {
             $upload->DeleteSameResult('names', $result_no, $generate_no);
             $upload->Upload("./output/chara/name_" . $result_no . "_" . $generate_no . ".csv", 'names');
+        }
+        if (ConstData::EXE_CHARA_ITEM) {
+            $upload->DeleteSameResult('items', $result_no, $generate_no);
+            $upload->Upload("./output/chara/item_" . $result_no . "_" . $generate_no . ".csv", 'items');
+        }
+        if (ConstData::EXE_CHARA_STATUS) {
+            $upload->DeleteSameResult('statuses', $result_no, $generate_no);
+            $upload->Upload("./output/chara/status_" . $result_no . "_" . $generate_no . ".csv", 'statuses');
+        }
+        if (ConstData::EXE_CHARA_SPEC) {
+            $upload->DeleteSameResult('specs', $result_no, $generate_no);
+            $upload->Upload("./output/chara/spec_" . $result_no . "_" . $generate_no . ".csv", 'specs');
+        }
+        if (ConstData::EXE_CHARA_CONDITION_ALL_TEXT) {
+            $upload->DeleteSameResult('condition_all_texts', $result_no, $generate_no);
+            $upload->Upload("./output/chara/condition_all_text_" . $result_no . "_" . $generate_no . ".csv", 'condition_all_texts');
+        }
+        if(ConstData::EXE_CHARA_REWARD) {
+            $upload->DeleteSameResult('rewards', $result_no, $generate_no);
+            $upload->Upload("./output/chara/reward_" . $result_no . "_" . $generate_no . ".csv", 'rewards');
+        }
+        if(ConstData::EXE_CHARA_BATTLE_SYSTEM) {
+            $upload->DeleteSameResult('battle_systems', $result_no, $generate_no);
+            $upload->Upload("./output/chara/battle_system_" . $result_no . "_" . $generate_no . ".csv", 'battle_systems');
+        }
+        if(ConstData::EXE_CHARA_INTENTION) {
+            $upload->DeleteSameResult('intentions', $result_no, $generate_no);
+            $upload->Upload("./output/chara/intention_" . $result_no . "_" . $generate_no . ".csv", 'intentions');
+        }
+        if(ConstData::EXE_CHARA_CONSORT_PLANE) {
+            $upload->DeleteSameResult('consort_planes', $result_no, $generate_no);
+            $upload->Upload("./output/chara/consort_plane_" . $result_no . "_" . $generate_no . ".csv", 'consort_planes');
+        }
+        if(ConstData::EXE_CHARA_ASSEMBLY_NUM) {
+            $upload->DeleteSameResult('assembly_nums', $result_no, $generate_no);
+            $upload->Upload("./output/chara/assembly_num_" . $result_no . "_" . $generate_no . ".csv", 'assembly_nums');
+        }
+        
+    }
+    if (ConstData::EXE_CHARALIST) {
+        if (ConstData::EXE_CHARALIST_NEXT_BATTLE) {
+            $upload->DeleteSameResult('next_battles', $result_no, $generate_no);
+            $upload->Upload("./output/charalist/next_battle_" . $result_no . "_" . $generate_no . ".csv", 'next_battles');
+        }
+    }
+    if (ConstData::EXE_BATTLE) {
+        if(ConstData::EXE_BATTLE_BLOCK) {
+            $upload->DeleteSameResult('blocks', $result_no, $generate_no);
+            $upload->Upload("./output/battle/block_" . $result_no . "_" . $generate_no . ".csv", 'blocks');
+        }
+        if(ConstData::EXE_BATTLE_TRANSITION) {
+            $upload->DeleteSameResult('transitions', $result_no, $generate_no);
+            $upload->Upload("./output/battle/transition_" . $result_no . "_" . $generate_no . ".csv", 'transitions');
         }
     }
     print "result_no:$result_no,generate_no:$generate_no\n";

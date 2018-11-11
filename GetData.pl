@@ -10,6 +10,9 @@ require "./source/lib/time.pm";
 require "./source/lib/NumCode.pm";
 require "./source/ProperName.pm";
 require "./source/Character.pm";
+require "./source/CharacterList.pm";
+require "./source/Battle.pm";
+require "./source/Tsv.pm";
 
 # パッケージの使用宣言    ---------------#
 use strict;
@@ -48,6 +51,9 @@ sub Main{
     
     push(@objects, ProperName->new()); #固有名詞読み込み・保持
     if (ConstData::EXE_CHARA)     { push(@objects, Character->new()); }     # キャラページ読み込み
+    if (ConstData::EXE_CHARALIST) { push(@objects, CharacterList->new()); } # キャラリストページ読み込み
+    if (ConstData::EXE_BATTLE)    { push(@objects, Battle->new());}         # 戦闘ページ読み込み
+    if (ConstData::EXE_TSV)       { push(@objects, Tsv->new()); }           # tsvファイル読み込み
 
     &Init(\@objects, $result_no, $generate_no, \%common_datas);
     &Execute(\@objects);

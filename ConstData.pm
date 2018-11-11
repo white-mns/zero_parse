@@ -23,4 +23,18 @@ use warnings;
     
     use constant EXE_CHARA      => 1;
         use constant EXE_CHARA_NAME            => 1;
+        use constant EXE_CHARA_STATUS          => 1;
+        use constant EXE_CHARA_SPEC            => 1;
+        use constant EXE_CHARA_REWARD          => 1;
+        use constant EXE_CHARA_BATTLE_SYSTEM   => 1;
+        use constant EXE_CHARA_INTENTION       => 1;
+        use constant EXE_CHARA_CONSORT_PLANE   => 1;
+    use constant EXE_TSV        => 1;
+        use constant EXE_TSV_UNITDATA          => 1;
+        use constant EXE_TSV_CATALOGDATA       => 1;
+    use constant EXE_CHARALIST  => 1;
+        use constant EXE_CHARALIST_NEXT_BATTLE => 1;
+    use constant EXE_BATTLE     => 1;
+        use constant EXE_BATTLE_BLOCK          => 1;
+        use constant EXE_BATTLE_TRANSITION     => 1;
 1;
