@@ -47,25 +47,12 @@ sub Init(){
                 "result_no",
                 "generate_no",
                 "e_no",
-                "ap",
-                "en",
-                "en_recovery",
-                "movement",
-                "weight",
-                "turning_speed",
-                "jump",
-                "max_power",
-                "search",
-                "precision",
-                "punding",
-                "aerosol",
-                "pysics",
-                "spirit",
-                "particle",
-                "flame",
-                "electric",
-                "loading",
-                "max_loading",
+                "invation",
+                "encount",
+                "technic",
+                "goodwill",
+                "intelligence",
+                "illegality",
     ];
     $self->{Datas}{Spec}->Init($header_list);
 
@@ -108,80 +95,33 @@ sub GetData{
 sub GetSpec{
     my $self           = shift;
     my $spec_data_node = shift;
-    my ($ap, $en, $en_recovery, $movement, $weight, $turning_speed, $jump, $max_power, $search, $precision, $punding, $aerosol, $pysics, $spirit, $particle, $flame, $electric, $loading, $max_loading) = (0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+    my ($invation, $encount, $technic, $goodwill, $intelligence, $illegality) = (0, 0, 0, 0, 0, 0);
 
     my $th_nodes = &GetNode::GetNode_Tag("th", \$spec_data_node);
 
     foreach my $th_node (@$th_nodes) {
-        if ($th_node->as_text eq "AP") {
-            $ap = $th_node->right->as_text;
+        if ($th_node->as_text eq "進行速度") {
+            $invation = $th_node->right->as_text;
 
-        } elsif ($th_node->as_text eq "EN") {
-            $en = $th_node->right->as_text;
+        } elsif ($th_node->as_text eq "エンカウント") {
+            $encount = $th_node->right->as_text;
 
-        } elsif ($th_node->as_text eq "EN回復量") {
-            $en_recovery = $th_node->right->as_text;
+        } elsif ($th_node->as_text eq "機巧技術") {
+            $technic = $th_node->right->as_text;
 
-        } elsif ($th_node->as_text eq "機動力") {
-            $movement = $th_node->right->as_text;
+        } elsif ($th_node->as_text eq "好感度") {
+            $goodwill = $th_node->right->as_text;
 
-        } elsif ($th_node->as_text eq "総重量") {
-            $weight = $th_node->right->as_text;
+        } elsif ($th_node->as_text eq "知性") {
+            $intelligence = $th_node->right->as_text;
 
-        } elsif ($th_node->as_text eq "旋回速度") {
-            $turning_speed = $th_node->right->as_text;
-
-        } elsif ($th_node->as_text eq "跳躍力") {
-            $jump = $th_node->right->as_text;
-
-        } elsif ($th_node->as_text eq "最大火力") {
-            $max_power = $th_node->right->as_text;
-
-        } elsif ($th_node->as_text eq "索敵範囲") {
-            $search = $th_node->right->as_text;
-
-        } elsif ($th_node->as_text eq "命中精度") {
-            $precision = $th_node->right->as_text;
-
-        } elsif ($th_node->as_text eq "貯水量") {
-            $punding = $th_node->right->as_text;
-
-        } elsif ($th_node->as_text eq "噴霧量") {
-            $aerosol = $th_node->right->as_text;
-        
-        } elsif ($th_node->as_text eq "物理防御") {
-            my $text = $th_node->right->as_text;
-            $pysics = ($text && $text ne " ") ? $text : 0;
-
-        } elsif ($th_node->as_text eq "霊障防御") {
-            my $text = $th_node->right->as_text;
-            $spirit = ($text && $text ne " ") ? $text : 0;
-
-        } elsif ($th_node->as_text eq "粒子防御") {
-            my $text = $th_node->right->as_text;
-            $particle = ($text && $text ne " ") ? $text : 0;
-
-        } elsif ($th_node->as_text eq "火炎防御") {
-            my $text = $th_node->right->as_text;
-            $flame = ($text && $text ne " ") ? $text : 0;
-
-        } elsif ($th_node->as_text eq "電子防御") {
-            my $text = $th_node->right->as_text;
-            $electric = ($text && $text ne " ") ? $text : 0;
-
-        } elsif ($th_node->as_text eq "積載量") {
-            if ($th_node->right->as_text =~ /([\-\d]+)\/(\d+)/) {
-                $loading     = $1;
-                $max_loading = $2;
-            }
-        } elsif ($th_node->as_text eq "機体状況") {
-            $self->GetConditionData($th_node->right);
+        } elsif ($th_node->as_text eq "違法性") {
+            $illegality = $th_node->right->as_text;
 
         }
     }
 
-    my @datas=($self->{ResultNo}, $self->{GenerateNo}, $self->{ENo}, $ap, $en, $en_recovery, $movement, $weight, $turning_speed, $jump, $max_power, $search, $precision, $punding, $aerosol, $pysics, $spirit, $particle, $flame, $electric, $loading, $max_loading);
-    $self->{Datas}{Spec}->AddData(join(ConstData::SPLIT, @datas));
+    $self->{Datas}{Spec}->AddData(join(ConstData::SPLIT, ($self->{ResultNo}, $self->{GenerateNo}, $self->{ENo}, $invation, $encount, $technic, $goodwill, $intelligence, $illegality) ));
 
     return;
 }
