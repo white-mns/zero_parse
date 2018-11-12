@@ -89,9 +89,9 @@ sub Main {
             $upload->DeleteSameResult('intentions', $result_no, $generate_no);
             $upload->Upload("./output/chara/intention_" . $result_no . "_" . $generate_no . ".csv", 'intentions');
         }
-        if(ConstData::EXE_CHARA_CONSORT_PLANE) {
-            $upload->DeleteSameResult('consort_planes', $result_no, $generate_no);
-            $upload->Upload("./output/chara/consort_plane_" . $result_no . "_" . $generate_no . ".csv", 'consort_planes');
+        if(ConstData::EXE_CHARA_PARTNERSHIP) {
+            $upload->DeleteSameResult('partnerships', $result_no, $generate_no);
+            $upload->Upload("./output/chara/partnership_" . $result_no . "_" . $generate_no . ".csv", 'partnerships');
         }
         if(ConstData::EXE_CHARA_ASSEMBLY_NUM) {
             $upload->DeleteSameResult('assembly_nums', $result_no, $generate_no);

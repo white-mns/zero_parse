@@ -1,5 +1,5 @@
 #===================================================================
-#        僚機取得パッケージ
+#        姉妹提携取得パッケージ
 #-------------------------------------------------------------------
 #            (C) 2018 @white_mns
 #===================================================================
@@ -17,7 +17,7 @@ use source::lib::GetNode;
 #------------------------------------------------------------------#
 #    パッケージの定義
 #------------------------------------------------------------------#     
-package ConsortPlane;
+package Partnership;
 
 #-----------------------------------#
 #    コンストラクタ
@@ -45,13 +45,13 @@ sub Init(){
                 "result_no",
                 "generate_no",
                 "e_no",
-                "consort_plane",
+                "partnership",
     ];
 
     $self->{Datas}{Data}->Init($header_list);
     
     #出力ファイル設定
-    $self->{Datas}{Data}->SetOutputName( "./output/chara/consort_plane_" . $self->{ResultNo} . "_" . $self->{GenerateNo} . ".csv" );
+    $self->{Datas}{Data}->SetOutputName( "./output/chara/partnership_" . $self->{ResultNo} . "_" . $self->{GenerateNo} . ".csv" );
     return;
 }
 
@@ -68,29 +68,29 @@ sub GetData{
     
     $self->{ENo} = $e_no;
 
-    $self->GetConsortPlaneData($h3_nodes, $charalist_table_node);
+    $self->GetPartnershipData($h3_nodes, $charalist_table_node);
     
     return;
 }
 
 #-----------------------------------#
-#    僚機データ取得
+#    姉妹提携データ取得
 #------------------------------------
 #    引数｜名前データノード
 #-----------------------------------#
-sub GetConsortPlaneData{
+sub GetPartnershipData{
     my $self  = shift;
     my $h3_nodes  = shift;
     my $charalist_table_node = shift;
-    my $consort_plane = 0;
+    my $partnership = 0;
 
     if (!$charalist_table_node) {return;}
 
     foreach my $h3_node (@$h3_nodes) {
-        if ($h3_node->as_text =~ /◆僚機設定/) {
+        if ($h3_node->as_text =~ /◆姉妹提携/) {
             if ($h3_node->right->as_text =~ /(.+?)とバディを結成した!!/) {
-                $consort_plane = $1;
-                $consort_plane =~ s/\s//g;
+                $partnership = $1;
+                $partnership =~ s/\s//g;
             }
             last;
         }
@@ -98,25 +98,25 @@ sub GetConsortPlaneData{
 
     my $a_nodes = &GetNode::GetNode_Tag("a", \$charalist_table_node);
     
-    if ($consort_plane =~ /^0$/) {return;}
+    if ($partnership =~ /^0$/) {return;}
 
     foreach my $a_node (@$a_nodes) {
         my $link_text = $a_node->as_text;
         $link_text =~ s/\s//g;
 
-        if ($link_text ne $consort_plane) {next;}
+        if ($link_text ne $partnership) {next;}
         
         my $link_href = $a_node->attr("href");
         if ($link_href !~ /c(\d{4})\.html/) {next;}
 
         if ($1 == $self->{ENo}) {next;}
 
-        $consort_plane = $1+0;
+        $partnership = $1+0;
 
         last;
     }
 
-    my @datas=($self->{ResultNo}, $self->{GenerateNo}, $self->{ENo}, $consort_plane);
+    my @datas=($self->{ResultNo}, $self->{GenerateNo}, $self->{ENo}, $partnership);
     $self->{Datas}{Data}->AddData(join(ConstData::SPLIT, @datas));
 
     return;
