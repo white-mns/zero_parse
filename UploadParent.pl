@@ -81,9 +81,9 @@ sub Main {
             $upload->DeleteSameResult('rewards', $result_no, $generate_no);
             $upload->Upload("./output/chara/reward_" . $result_no . "_" . $generate_no . ".csv", 'rewards');
         }
-        if(ConstData::EXE_CHARA_BATTLE_SYSTEM) {
-            $upload->DeleteSameResult('battle_systems', $result_no, $generate_no);
-            $upload->Upload("./output/chara/battle_system_" . $result_no . "_" . $generate_no . ".csv", 'battle_systems');
+        if(ConstData::EXE_CHARA_REGALIA) {
+            $upload->DeleteSameResult('regalias', $result_no, $generate_no);
+            $upload->Upload("./output/chara/regalia_" . $result_no . "_" . $generate_no . ".csv", 'regalias');
         }
         if(ConstData::EXE_CHARA_INTENTION) {
             $upload->DeleteSameResult('intentions', $result_no, $generate_no);

@@ -26,7 +26,7 @@ use warnings;
         use constant EXE_CHARA_SPEC               => 1;
         use constant EXE_CHARA_CONDITION_ALL_TEXT => 1;
         use constant EXE_CHARA_REWARD             => 1;
-        use constant EXE_CHARA_BATTLE_SYSTEM      => 1;
+        use constant EXE_CHARA_REGALIA            => 1;
         use constant EXE_CHARA_INTENTION          => 1;
         use constant EXE_CHARA_PARTNERSHIP        => 1;
         use constant EXE_CHARA_ASSEMBLY_NUM       => 1;

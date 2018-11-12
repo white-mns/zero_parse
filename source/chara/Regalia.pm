@@ -1,5 +1,5 @@
 #===================================================================
-#        戦闘システム取得パッケージ
+#        レガリア取得パッケージ
 #-------------------------------------------------------------------
 #            (C) 2018 @white_mns
 #===================================================================
@@ -17,7 +17,7 @@ use source::lib::GetNode;
 #------------------------------------------------------------------#
 #    パッケージの定義
 #------------------------------------------------------------------#     
-package BattleSystem;
+package Regalia;
 
 #-----------------------------------#
 #    コンストラクタ
@@ -45,13 +45,13 @@ sub Init(){
                 "result_no",
                 "generate_no",
                 "e_no",
-                "battle_system",
+                "regalia",
     ];
 
     $self->{Datas}{Data}->Init($header_list);
     
     #出力ファイル設定
-    $self->{Datas}{Data}->SetOutputName( "./output/chara/battle_system_" . $self->{ResultNo} . "_" . $self->{GenerateNo} . ".csv" );
+    $self->{Datas}{Data}->SetOutputName( "./output/chara/regalia_" . $self->{ResultNo} . "_" . $self->{GenerateNo} . ".csv" );
     return;
 }
 
@@ -67,31 +67,31 @@ sub GetData{
     
     $self->{ENo} = $e_no;
 
-    $self->GetBattleSystemData($h3_nodes);
+    $self->GetRegaliaData($h3_nodes);
     
     return;
 }
 
 #-----------------------------------#
-#    戦闘システムデータ取得
+#    レガリアデータ取得
 #------------------------------------
 #    引数｜名前データノード
 #-----------------------------------#
-sub GetBattleSystemData{
+sub GetRegaliaData{
     my $self  = shift;
     my $h3_nodes  = shift;
-    my $battle_system = 0;
+    my $regalia = 0;
 
     foreach my $h3_node (@$h3_nodes) {
-        if ($h3_node->as_text =~ /◆戦闘システム決定/) {
+        if ($h3_node->as_text =~ /◆レガリア決定/) {
             if ($h3_node->right->as_text =~ /(.+?) に決定!!/) {
-                $battle_system = $self->{CommonDatas}{ProperName}->GetOrAddId($1);
+                $regalia = $self->{CommonDatas}{ProperName}->GetOrAddId($1);
             }
             last;
         }
     }
 
-    my @datas=($self->{ResultNo}, $self->{GenerateNo}, $self->{ENo}, $battle_system);
+    my @datas=($self->{ResultNo}, $self->{GenerateNo}, $self->{ENo}, $regalia);
     $self->{Datas}{Data}->AddData(join(ConstData::SPLIT, @datas));
 
     return;
