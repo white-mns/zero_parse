@@ -53,33 +53,19 @@ sub Init(){
                 "kind",
                 "unique_1",
                 "unique_2",
-                "ap",
-                "spending_en",
                 "value",
-                "ammunition_cost",
-                "weight",
-                "turning_speed",
-                "guard_elemental",
-                "guard_value",
-                "precision",
-                "punding",
-                "aerosol",
-                "bullet",
-                "loading",
-                "weapon_element",
-                "add_abnormity",
+                "invation",
+                "encount",
+                "technic",
+                "goodwill",
+                "intelligence",
+                "stock",
+                "add_effect",
                 "strength",
-                "gunshot",
-                "struggle",
-                "reaction",
-                "control",
-                "preparation",
-                "fitly",
                 "equip",
                 "fuka_1",
                 "fuka_2",
                 "orig_name",
-                "drunkenness",
     ];
 
     $self->{Datas}{Item}->Init($header_list);
@@ -146,51 +132,23 @@ sub GetUnitData{
     my $kind = $self->{CommonDatas}{ProperName}->GetOrAddId($$data[2]);
     my $unique_1 = $$data[3];
     my $unique_2 = $$data[4];
-    my $ap = $$data[5];
-    my $spending_en = $$data[6];
     my $value = $$data[7];
-    my $ammunition_cost = $$data[8];
-    my $weight = $$data[9];
-    my $turning_speed = $$data[10];
-    
-    my $guard_elemental = $$data[11];
-    if ($guard_elemental =~ /^[0-9]+$/) {
-        # カタログデータと違って防御値が数字で入っているので、変換する
-        $guard_elemental =~ s/1/物理/s; 
-        $guard_elemental =~ s/2/粒子/s;
-        $guard_elemental =~ s/3/霊障/s;
-        $guard_elemental =~ s/4/電子/s;
-        $guard_elemental =~ s/5/火炎/s;
-    }
-    $guard_elemental = $self->{CommonDatas}{ProperName}->GetOrAddId($guard_elemental);
-
-    my $guard_value = $$data[12];
-    my $precision = $$data[13];
-    my $punding = $$data[14];
-    my $aerosol = $$data[15];
-    my $bullet = $$data[16];
-    my $loading = $$data[17];
-    my $weapon_element = $self->{CommonDatas}{ProperName}->GetOrAddId($$data[18]);
-    my $add_abnormity = $$data[19];
+    my $invation = $$data[8];
+    my $encount = $$data[10];
+    my $technic = $$data[13];
+    my $goodwill = $$data[14];
+    my $intelligence = $$data[15];
+    my $stock = $$data[16];
+    my $add_effect = $self->{CommonDatas}{ProperName}->GetOrAddId($$data[18]);
     my $strength = $$data[21];
-    my $gunshot = $$data[22];
-    my $struggle = $$data[23];
-    my $reaction = $$data[24];
-    my $control = $$data[25];
-    my $preparation = $$data[26];
-    my $fitly = $$data[27];
-    my $equip = $$data[29];
+    my $equip = ($$data[26] =~ /^[0-9]+$/) ? $$data[26]+100 : $$data[26];
     my $fuka_1 = $self->{CommonDatas}{ProperName}->GetOrAddId($$data[30]);
     my $fuka_2 = $self->{CommonDatas}{ProperName}->GetOrAddId($$data[31]);
-
     my $orig_name = $$data[36];
     $orig_name =~ s/\s//g;
     $orig_name = $self->{CommonDatas}{ProperName}->GetOrAddId($orig_name);
 
-    my $drunkenness = $$data[37] ? $$data[37] : 0;
-
-    my @datas=($self->{ResultNo}, $self->{GenerateNo}, $e_no, $i_no, $name, $kind, $unique_1, $unique_2, $ap, $spending_en, $value, $ammunition_cost, $weight, $turning_speed, $guard_elemental, $guard_value, $precision, $punding, $aerosol, $bullet, $loading, $weapon_element, $add_abnormity, $strength, $gunshot, $struggle, $reaction, $control, $preparation, $fitly, $equip, $fuka_1, $fuka_2, $orig_name, $drunkenness);
-    $self->{Datas}{Item}->AddData(join(ConstData::SPLIT, @datas));
+    $self->{Datas}{Item}->AddData(join(ConstData::SPLIT, ($self->{ResultNo}, $self->{GenerateNo}, $e_no, $i_no, $name, $kind, $unique_1, $unique_2, $value, $invation, $encount, $technic, $goodwill, $intelligence, $stock, $add_effect, $strength, $equip, $fuka_1, $fuka_2, $orig_name) ));
     
     if ($equip) {
         $self->{AssemblyNum}{$e_no}{0}{$kind}      += 1;
