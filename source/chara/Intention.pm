@@ -45,7 +45,7 @@ sub Init(){
                 "result_no",
                 "generate_no",
                 "e_no",
-                "intention",
+                "intention_id",
     ];
 
     $self->{Datas}{Data}->Init($header_list);

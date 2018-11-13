@@ -73,25 +73,25 @@ sub Main {
             $upload->DeleteSameResult('specs', $result_no, $generate_no);
             $upload->Upload("./output/chara/spec_" . $result_no . "_" . $generate_no . ".csv", 'specs');
         }
-        if (ConstData::EXE_CHARA_CONDITION_ALL_TEXT) {
-            $upload->DeleteSameResult('condition_all_texts', $result_no, $generate_no);
-            $upload->Upload("./output/chara/condition_all_text_" . $result_no . "_" . $generate_no . ".csv", 'condition_all_texts');
+        if (ConstData::EXE_CHARA_CONDITION) {
+            $upload->DeleteSameResult('conditions', $result_no, $generate_no);
+            $upload->Upload("./output/chara/condition_" . $result_no . "_" . $generate_no . ".csv", 'conditions');
         }
         if(ConstData::EXE_CHARA_REWARD) {
             $upload->DeleteSameResult('rewards', $result_no, $generate_no);
             $upload->Upload("./output/chara/reward_" . $result_no . "_" . $generate_no . ".csv", 'rewards');
         }
-        if(ConstData::EXE_CHARA_BATTLE_SYSTEM) {
-            $upload->DeleteSameResult('battle_systems', $result_no, $generate_no);
-            $upload->Upload("./output/chara/battle_system_" . $result_no . "_" . $generate_no . ".csv", 'battle_systems');
+        if(ConstData::EXE_CHARA_REGALIA) {
+            $upload->DeleteSameResult('regalia', $result_no, $generate_no);
+            $upload->Upload("./output/chara/regalia_" . $result_no . "_" . $generate_no . ".csv", 'regalia');
         }
         if(ConstData::EXE_CHARA_INTENTION) {
             $upload->DeleteSameResult('intentions', $result_no, $generate_no);
             $upload->Upload("./output/chara/intention_" . $result_no . "_" . $generate_no . ".csv", 'intentions');
         }
-        if(ConstData::EXE_CHARA_CONSORT_PLANE) {
-            $upload->DeleteSameResult('consort_planes', $result_no, $generate_no);
-            $upload->Upload("./output/chara/consort_plane_" . $result_no . "_" . $generate_no . ".csv", 'consort_planes');
+        if(ConstData::EXE_CHARA_PARTNERSHIP) {
+            $upload->DeleteSameResult('partnerships', $result_no, $generate_no);
+            $upload->Upload("./output/chara/partnership_" . $result_no . "_" . $generate_no . ".csv", 'partnerships');
         }
         if(ConstData::EXE_CHARA_ASSEMBLY_NUM) {
             $upload->DeleteSameResult('assembly_nums', $result_no, $generate_no);

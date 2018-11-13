@@ -45,14 +45,12 @@ sub Init(){
                 "result_no",
                 "generate_no",
                 "e_no",
-                "acc_reward",
+                "ranking_rate",
                 "rp",
-                "gunshot",
-                "struggle",
-                "reaction",
-                "control",
-                "preparation",
-                "fitly",
+                "acc_total",
+                "acc_attack",
+                "acc_support",
+                "acc_defense",
                 "funds",
                 "exp",
     ];
@@ -89,34 +87,27 @@ sub GetStatusData{
     my $self         = shift;
     my $status_node  = shift;
 
-
-    my ($acc_reward, $rp, $gunshot, $struggle, $reaction, $control, $preparation, $fitly, $funds, $exp) = (0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+    my ($ranking_rate, $rp, $acc_total, $acc_attack, $acc_support, $acc_defense, $funds, $exp) = (0, 0, 0, 0, 0, 0, 0, 0);
     my $th_nodes = &GetNode::GetNode_Tag("th", \$status_node);
 
     foreach my $th_node (@$th_nodes) {
-        if ($th_node->as_text eq "累積報酬") {
-            $acc_reward = $th_node->right->as_text;
+        if ($th_node->as_text eq "ランキングレート") {
+            $ranking_rate = $th_node->right->as_text;
 
         } elsif ($th_node->as_text eq "RP") {
             $rp = $th_node->right->as_text;
 
-        } elsif ($th_node->as_text eq "射撃") {
-            $gunshot = $th_node->right->as_text;
+        } elsif ($th_node->as_text eq "累積総合戦果") {
+            $acc_total = $th_node->right->as_text;
 
-        } elsif ($th_node->as_text eq "格闘") {
-            $struggle = $th_node->right->as_text;
+        } elsif ($th_node->as_text eq "累積攻撃戦果") {
+            $acc_attack = $th_node->right->as_text;
 
-        } elsif ($th_node->as_text eq "反応") {
-            $reaction = $th_node->right->as_text;
+        } elsif ($th_node->as_text eq "累積支援戦果") {
+            $acc_support = $th_node->right->as_text;
 
-        } elsif ($th_node->as_text eq "制御") {
-            $control = $th_node->right->as_text;
-
-        } elsif ($th_node->as_text eq "整備") {
-            $preparation = $th_node->right->as_text;
-
-        } elsif ($th_node->as_text eq "適性") {
-            $fitly = $th_node->right->as_text;
+        } elsif ($th_node->as_text eq "累積防衛戦果") {
+            $acc_defense = $th_node->right->as_text;
 
         } elsif ($th_node->as_text eq "所持資金") {
             $funds = $th_node->right->as_text;
@@ -126,8 +117,8 @@ sub GetStatusData{
 
         }
     }
-    my @datas=($self->{ResultNo}, $self->{GenerateNo}, $self->{ENo}, $acc_reward, $rp, $gunshot, $struggle, $reaction, $control, $preparation, $fitly, $funds, $exp);
-    $self->{Datas}{Data}->AddData(join(ConstData::SPLIT, @datas));
+
+    $self->{Datas}{Data}->AddData(join(ConstData::SPLIT, ($self->{ResultNo}, $self->{GenerateNo}, $self->{ENo}, $ranking_rate, $rp, $acc_total, $acc_attack, $acc_support, $acc_defense, $funds, $exp) ));
 
     return;
 }

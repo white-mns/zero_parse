@@ -45,25 +45,8 @@ sub Init(){
                 "result_no",
                 "generate_no",
                 "e_no",
-                "battle_income",
-                "add_income",
-                "attack",
-                "support",
-                "defense",
-                "defeat",
-                "selling",
-                "sub_quest",
-                "enemy_caution",
-                "colosseum_win",
-                "fight_money",
-                "total_income",
-                "ammunition_cost",
-                "preparation_deduction",
-                "preparation_cost",
-                "union_cost",
-                "prize",
-                "union_interest",
-                "parts_sell",
+                "reward_type_id",
+                "value",
     ];
 
     $self->{Datas}{Data}->Init($header_list);
@@ -98,76 +81,50 @@ sub GetData{
 sub GetRewardData{
     my $self  = shift;
     my $reward_node  = shift;
-    my ($battle_income, $add_income, $attack, $support, $defense, $defeat, $selling, $sub_quest, $enemy_caution, $colosseum_win, $fight_money, $total_income, $ammunition_cost, $preparation_deduction, $preparation_cost, $union_cost, $prize, $union_interest, $parts_sell) = (0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
 
     my @reward_children = $reward_node->content_list;
 
     for (my $i=0;$i < scalar(@reward_children);$i++) {
+        my ($reward_type, $value) = (0, 0);
         my $reward_child = $reward_children[$i];
+        if ($reward_children[$i+1] && $reward_children[$i+1] =~ /HASH/) {$value = $reward_children[$i+1]->as_text};
 
-        if ($reward_child =~ /戦闘収入/) {
-            $battle_income = $reward_children[$i+1]->as_text;
+        if ($reward_child =~ /戦利売上高/) {
+            $reward_type =  $self->{CommonDatas}{ProperName}->GetOrAddId("戦利売上高");
 
-        } elsif ($reward_child =~ /追加収入/) {
-            $add_income = $reward_children[$i+1]->as_text;
+        } elsif ($reward_child =~ /攻撃戦果収入/) {
+            $reward_type =  $self->{CommonDatas}{ProperName}->GetOrAddId("攻撃戦果");
 
-        } elsif ($reward_child =~ /攻撃戦果補正/) {
-            $attack = $self->ExtractCompensationValue($reward_children[$i+1]->as_text);
+        } elsif ($reward_child =~ /支援戦果収入/) {
+            $reward_type =  $self->{CommonDatas}{ProperName}->GetOrAddId("支援戦果");
 
-        } elsif ($reward_child =~ /支援戦果補正/) {
-            $support = $self->ExtractCompensationValue($reward_children[$i+1]->as_text);
+        } elsif ($reward_child =~ /防衛戦果収入/) {
+            $reward_type =  $self->{CommonDatas}{ProperName}->GetOrAddId("防衛戦果");
 
-        } elsif ($reward_child =~ /防衛戦果補正/) {
-            $defense = $self->ExtractCompensationValue($reward_children[$i+1]->as_text);
-
-        } elsif ($reward_child =~ /撃墜数補正/) {
-            $defeat = $self->ExtractCompensationValue($reward_children[$i+1]->as_text);
-
-        } elsif ($reward_child =~ /販売数補正/) {
-            $selling = $self->ExtractCompensationValue($reward_children[$i+1]->as_text);
-
-        } elsif ($reward_child =~ /サブクエスト/) {
-            $sub_quest = $self->ExtractCompensationValue($reward_children[$i+1]->as_text);
-
-        } elsif ($reward_child =~ /コロッセオ勝利補正/) {
-            $colosseum_win = $self->ExtractCompensationValue($reward_children[$i+1]->as_text);
-
-        } elsif ($reward_child =~ /ファイトマネー補正/) {
-            $fight_money = $self->ExtractCompensationValue($reward_children[$i+1]->as_text);
-
-        } elsif ($reward_child =~ /敵警戒値補正/) {
-            $enemy_caution = $self->ExtractCompensationValue($reward_children[$i+1]->as_text);
+        } elsif ($reward_child =~ /捕虜交換/) {
+            $reward_type =  $self->{CommonDatas}{ProperName}->GetOrAddId("捕虜交換");
 
         } elsif ($reward_child =~ /合計現金収入/) {
-            $total_income = $reward_children[$i+1]->as_text;
+            $reward_type =  $self->{CommonDatas}{ProperName}->GetOrAddId("合計現金収入");
 
-        } elsif ($reward_child =~ /弾薬費請求/) {
-            $ammunition_cost = $reward_children[$i+1]->as_text;
+        } elsif ($reward_child =~ /【！】収入/) {
+            $reward_type =  $self->{CommonDatas}{ProperName}->GetOrAddId("収入");
+            if ($value =~ /(\d)money/) {
+                $value = $1;
+            }
 
-        } elsif ($reward_child =~ /整備控除修正額/) {
-            $preparation_deduction = $reward_children[$i+1]->as_text;
+        } elsif ($reward_child =~ /【！】経費/) {
+            $reward_type =  $self->{CommonDatas}{ProperName}->GetOrAddId("経費");
+            if ($value =~ /(\d)money/) {
+                $value = $1;
+            }
+        }
 
-        } elsif ($reward_child =~ /整備請求額/) {
-            $preparation_cost = $reward_children[$i+1]->as_text;
-            
-        } elsif ($reward_child =~ /ユニオン費/) {
-            $union_cost = $reward_children[$i+1]->as_text;
-            
-        } elsif ($reward_child =~ /賞金/) {
-            $prize = $reward_children[$i+1]->as_text;
-            
-        } elsif ($reward_child =~ /ユニオン利子/) {
-            $union_interest = $reward_children[$i+1]->as_text;
-            
-        } elsif ($reward_child =~ /パーツ販売数/) {
-            my $text = $reward_children[$i+1]->as_text;
-            $text =~ s/個//g;
-            $parts_sell = $text;
+        if ($reward_type) {
+            $self->{Datas}{Data}->AddData(join(ConstData::SPLIT, ($self->{ResultNo}, $self->{GenerateNo}, $self->{ENo}, $reward_type, $value) ));
         }
     }
 
-    my @datas=($self->{ResultNo}, $self->{GenerateNo}, $self->{ENo}, $battle_income, $add_income, $attack, $support, $defense, $defeat, $selling, $sub_quest, $enemy_caution, $colosseum_win, $fight_money, $total_income, $ammunition_cost, $preparation_deduction, $preparation_cost, $union_cost, $prize, $union_interest, $parts_sell);
-    $self->{Datas}{Data}->AddData(join(ConstData::SPLIT, @datas));
 
     return;
 }

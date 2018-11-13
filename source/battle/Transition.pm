@@ -37,7 +37,6 @@ sub Init(){
     my $self = shift;
     ($self->{ResultNo}, $self->{GenerateNo}, $self->{CommonDatas}) = @_;
 
-    $self->{CommonDatas}{NickName} = {};
     $self->{TypeName} = {
         "攻撃" => 1,
         "支援" => 2,
@@ -124,7 +123,7 @@ sub ReadH3Nodes{
     my $act  = 0;
     my $e_no  = 0;
 
-    if ($h3_node->as_text =~ /(\d+)番隊(\d+)回目の(?:残像の)*(.+)戦闘機動!!/) {
+    if ($h3_node->as_text =~ /(\d+)番街(\d+)回目の(?:残像の)*(.+)の城状況!!/) {
         $act = $2;
         my $nickname = $3;
         if (exists($self->{CommonDatas}{NickName}{$nickname})) {
