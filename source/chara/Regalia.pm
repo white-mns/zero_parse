@@ -45,7 +45,7 @@ sub Init(){
                 "result_no",
                 "generate_no",
                 "e_no",
-                "regalia",
+                "regalia_id",
     ];
 
     $self->{Datas}{Data}->Init($header_list);

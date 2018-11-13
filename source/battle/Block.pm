@@ -37,8 +37,6 @@ sub Init(){
     my $self = shift;
     ($self->{ResultNo}, $self->{GenerateNo}, $self->{CommonDatas}) = @_;
 
-    $self->{CommonDatas}{NickName} = {};
-    
     #初期化
     $self->{Datas}{Data}  = StoreData->new();
     my $header_list = "";

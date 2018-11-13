@@ -73,17 +73,17 @@ sub Main {
             $upload->DeleteSameResult('specs', $result_no, $generate_no);
             $upload->Upload("./output/chara/spec_" . $result_no . "_" . $generate_no . ".csv", 'specs');
         }
-        if (ConstData::EXE_CHARA_CONDITION_ALL_TEXT) {
-            $upload->DeleteSameResult('condition_all_texts', $result_no, $generate_no);
-            $upload->Upload("./output/chara/condition_all_text_" . $result_no . "_" . $generate_no . ".csv", 'condition_all_texts');
+        if (ConstData::EXE_CHARA_CONDITION) {
+            $upload->DeleteSameResult('conditions', $result_no, $generate_no);
+            $upload->Upload("./output/chara/condition_" . $result_no . "_" . $generate_no . ".csv", 'conditions');
         }
         if(ConstData::EXE_CHARA_REWARD) {
             $upload->DeleteSameResult('rewards', $result_no, $generate_no);
             $upload->Upload("./output/chara/reward_" . $result_no . "_" . $generate_no . ".csv", 'rewards');
         }
         if(ConstData::EXE_CHARA_REGALIA) {
-            $upload->DeleteSameResult('regalias', $result_no, $generate_no);
-            $upload->Upload("./output/chara/regalia_" . $result_no . "_" . $generate_no . ".csv", 'regalias');
+            $upload->DeleteSameResult('regalia', $result_no, $generate_no);
+            $upload->Upload("./output/chara/regalia_" . $result_no . "_" . $generate_no . ".csv", 'regalia');
         }
         if(ConstData::EXE_CHARA_INTENTION) {
             $upload->DeleteSameResult('intentions', $result_no, $generate_no);

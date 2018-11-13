@@ -45,7 +45,7 @@ sub Init(){
                 "result_no",
                 "generate_no",
                 "e_no",
-                "reword_type",
+                "reward_type_id",
                 "value",
     ];
 

@@ -45,7 +45,7 @@ sub Init(){
                 "result_no",
                 "generate_no",
                 "e_no",
-                "partnership",
+                "partner_e_no",
     ];
 
     $self->{Datas}{Data}->Init($header_list);
@@ -103,6 +103,7 @@ sub GetPartnershipData{
     foreach my $a_node (@$a_nodes) {
         my $link_text = $a_node->as_text;
         $link_text =~ s/\s//g;
+        $link_text =~ s/ID\-\d+　//g;
 
         if ($link_text ne $partnership) {next;}
         

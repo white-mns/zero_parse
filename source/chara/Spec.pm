@@ -39,7 +39,7 @@ sub Init(){
     
     #初期化
     $self->{Datas}{Spec}                 = StoreData->new();
-    $self->{Datas}{ConditionAllTextData} = StoreData->new();
+    $self->{Datas}{Condition} = StoreData->new();
 
     my $header_list = "";
    
@@ -52,6 +52,7 @@ sub Init(){
                 "technic",
                 "goodwill",
                 "intelligence",
+                "drink",
                 "illegality",
     ];
     $self->{Datas}{Spec}->Init($header_list);
@@ -60,13 +61,13 @@ sub Init(){
                 "result_no",
                 "generate_no",
                 "e_no",
-                "condition_text",
+                "condition_id",
     ];
 
-    $self->{Datas}{ConditionAllTextData}->Init($header_list);
+    $self->{Datas}{Condition}->Init($header_list);
     #出力ファイル設定
-    $self->{Datas}{Spec}->SetOutputName                ( "./output/chara/spec_"               . $self->{ResultNo} . "_" . $self->{GenerateNo} . ".csv" );
-    $self->{Datas}{ConditionAllTextData}->SetOutputName( "./output/chara/condition_all_text_" . $self->{ResultNo} . "_" . $self->{GenerateNo} . ".csv" );
+    $self->{Datas}{Spec}->SetOutputName     ( "./output/chara/spec_"      . $self->{ResultNo} . "_" . $self->{GenerateNo} . ".csv" );
+    $self->{Datas}{Condition}->SetOutputName( "./output/chara/condition_" . $self->{ResultNo} . "_" . $self->{GenerateNo} . ".csv" );
     return;
 }
 
@@ -95,12 +96,12 @@ sub GetData{
 sub GetSpec{
     my $self           = shift;
     my $spec_data_node = shift;
-    my ($invation, $encount, $technic, $goodwill, $intelligence, $illegality) = (0, 0, 0, 0, 0, 0);
+    my ($invation, $encount, $technic, $goodwill, $intelligence, $drink, $illegality) = (0, 0, 0, 0, 0, 0, 0);
 
     my $th_nodes = &GetNode::GetNode_Tag("th", \$spec_data_node);
 
     foreach my $th_node (@$th_nodes) {
-        if ($th_node->as_text eq "進行速度") {
+        if ($th_node->as_text eq "侵攻速度") {
             $invation = $th_node->right->as_text;
 
         } elsif ($th_node->as_text eq "エンカウント") {
@@ -115,13 +116,19 @@ sub GetSpec{
         } elsif ($th_node->as_text eq "知性") {
             $intelligence = $th_node->right->as_text;
 
+        } elsif ($th_node->as_text eq "送品酔い") {
+            $drink = $th_node->right->as_text;
+
         } elsif ($th_node->as_text eq "違法性") {
             $illegality = $th_node->right->as_text;
+
+        } elsif ($th_node->as_text eq "城状況") {
+            $self->GetConditionData($th_node->right);
 
         }
     }
 
-    $self->{Datas}{Spec}->AddData(join(ConstData::SPLIT, ($self->{ResultNo}, $self->{GenerateNo}, $self->{ENo}, $invation, $encount, $technic, $goodwill, $intelligence, $illegality) ));
+    $self->{Datas}{Spec}->AddData(join(ConstData::SPLIT, ($self->{ResultNo}, $self->{GenerateNo}, $self->{ENo}, $invation, $encount, $technic, $goodwill, $intelligence, $drink, $illegality) ));
 
     return;
 }
@@ -135,13 +142,13 @@ sub GetConditionData{
     my $self           = shift;
     my $condition_node = shift;
 
-    my ($condition, $condition_text) = (0, "");
+    my $condition_text = "";
 
     foreach my $child ($condition_node->content_list) {
+        my $condition = 0;
         my $text = ($child =~ /HASH/) ? $child->as_text : $child;
         
         if (!($text && $text ne " ")) { next;}
-        if ($text =~ /付加発動/)     { last;}
         if ($text =~ /(.+)…(.+)/) {
             $condition = $self->{CommonDatas}{ProperName}->GetOrAddId($1);
 
@@ -149,11 +156,10 @@ sub GetConditionData{
             $condition = $self->{CommonDatas}{ProperName}->GetOrAddId($text);
         }
         $condition_text .= ($text && $text ne " ") ? "$text," : "";
+        $self->{Datas}{Condition}->AddData(join(ConstData::SPLIT, ($self->{ResultNo}, $self->{GenerateNo}, $self->{ENo}, $condition) ));
     }
 
     chop($condition_text);
-    my @datas=($self->{ResultNo}, $self->{GenerateNo}, $self->{ENo}, $condition_text);
-    $self->{Datas}{ConditionAllTextData}->AddData(join(ConstData::SPLIT, @datas));
 
     return;
 }

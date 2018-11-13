@@ -50,7 +50,7 @@ sub Init(){
                 "e_no",
                 "i_no",
                 "name",
-                "kind",
+                "kind_id",
                 "unique_1",
                 "unique_2",
                 "value",
@@ -60,12 +60,12 @@ sub Init(){
                 "goodwill",
                 "intelligence",
                 "stock",
-                "add_effect",
+                "add_effect_id",
                 "strength",
                 "equip",
-                "fuka_1",
-                "fuka_2",
-                "orig_name",
+                "fuka_1_id",
+                "fuka_2_id",
+                "orig_name_id",
     ];
 
     $self->{Datas}{Item}->Init($header_list);
@@ -74,7 +74,7 @@ sub Init(){
                 "result_no",
                 "generate_no",
                 "e_no",
-                "division_type",
+                "division_type_id",
                 "proper_name_id",
                 "num",
     ];
@@ -141,7 +141,7 @@ sub GetUnitData{
     my $stock = $$data[16];
     my $add_effect = $self->{CommonDatas}{ProperName}->GetOrAddId($$data[18]);
     my $strength = $$data[21];
-    my $equip = ($$data[26] =~ /^[0-9]+$/) ? $$data[26]+100 : $$data[26];
+    my $equip = ($$data[26] =~ /^[0-9\-]+$/) ? $$data[26]+100 : $$data[26];
     my $fuka_1 = $self->{CommonDatas}{ProperName}->GetOrAddId($$data[30]);
     my $fuka_2 = $self->{CommonDatas}{ProperName}->GetOrAddId($$data[31]);
     my $orig_name = $$data[36];
@@ -153,6 +153,21 @@ sub GetUnitData{
     if ($equip) {
         $self->{AssemblyNum}{$e_no}{0}{$kind}      += 1;
         $self->{AssemblyNum}{$e_no}{1}{$orig_name} += 1;
+
+        my $kind_name = $$data[2];
+
+        if    ($kind_name =~ /徳/)     { $self->{AssemblyNum}{$e_no}{2}{$self->{CommonDatas}{ProperName}->GetOrAddId("徳")}     += 1;}
+        if    ($kind_name =~ /カルマ/) { $self->{AssemblyNum}{$e_no}{2}{$self->{CommonDatas}{ProperName}->GetOrAddId("カルマ")} += 1;}
+
+        if    ($kind_name =~ /護衛/) { $self->{AssemblyNum}{$e_no}{3}{$self->{CommonDatas}{ProperName}->GetOrAddId("護衛")} += 1;}
+        elsif ($kind_name =~ /罠/)   { $self->{AssemblyNum}{$e_no}{3}{$self->{CommonDatas}{ProperName}->GetOrAddId("罠")} += 1;}
+        elsif ($kind_name =~ /建築/) { $self->{AssemblyNum}{$e_no}{3}{$self->{CommonDatas}{ProperName}->GetOrAddId("建築")} += 1;}
+
+        if    ($kind_name =~ /物理/) { $self->{AssemblyNum}{$e_no}{4}{$self->{CommonDatas}{ProperName}->GetOrAddId("物理")} += 1;}
+        elsif ($kind_name =~ /冷気/) { $self->{AssemblyNum}{$e_no}{4}{$self->{CommonDatas}{ProperName}->GetOrAddId("冷気")} += 1;}
+        elsif ($kind_name =~ /聖魔/) { $self->{AssemblyNum}{$e_no}{4}{$self->{CommonDatas}{ProperName}->GetOrAddId("聖魔")} += 1;}
+        elsif ($kind_name =~ /電撃/) { $self->{AssemblyNum}{$e_no}{4}{$self->{CommonDatas}{ProperName}->GetOrAddId("電撃")} += 1;}
+        elsif ($kind_name =~ /火炎/) { $self->{AssemblyNum}{$e_no}{4}{$self->{CommonDatas}{ProperName}->GetOrAddId("火炎")} += 1;}
     }
 
     return;

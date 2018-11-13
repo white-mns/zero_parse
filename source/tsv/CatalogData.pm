@@ -46,7 +46,7 @@ sub Init(){
                 "e_no",
                 "market_no",
                 "name",
-                "kind",
+                "kind_id",
                 "unique_1",
                 "unique_2",
                 "value",
@@ -56,13 +56,13 @@ sub Init(){
                 "goodwill",
                 "intelligence",
                 "stock",
-                "add_effect",
+                "add_effect_id",
                 "strength",
                 "equip",
-                "fuka_1",
-                "fuka_2",
+                "fuka_1_id",
+                "fuka_2_id",
                 "charge",
-                "orig_name",
+                "orig_name_id",
     ];
 
     $self->{Datas}{Item}->Init($header_list);
