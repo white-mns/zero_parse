@@ -29,9 +29,6 @@ $timeChecker->CheckTime("end    \t");
 $timeChecker->OutputTime();
 $timeChecker = undef;
 
-
-
-
 # 宣言部    ---------------------------#
 
 sub Main {
@@ -47,75 +44,66 @@ sub Main {
     $upload->DBConnect();
     
     if (ConstData::EXE_DATA) {
-        if (ConstData::EXE_DATA_PROPER_NAME) {
-            $upload->DeleteAll('proper_names');
-            $upload->Upload("./output/data/proper_name.csv", 'proper_names');
-        }
+        &UploadData($upload, ConstData::EXE_DATA_PROPER_NAME, "proper_names", "./output/data/proper_name.csv");
     }
     if (ConstData::EXE_MARKET) {
-        $upload->DeleteSameResult('markets', $result_no, $generate_no);
-        $upload->Upload("./output/market/catalog_" . $result_no . "_" . $generate_no . ".csv", 'markets');
+        &UploadResult($upload, $result_no, $generate_no, ConstData::EXE_DATA_PROPER_NAME, "markets", "./output/market/catalog_");
     }
     if (ConstData::EXE_CHARA) {
-        if (ConstData::EXE_CHARA_NAME) {
-            $upload->DeleteSameResult('names', $result_no, $generate_no);
-            $upload->Upload("./output/chara/name_" . $result_no . "_" . $generate_no . ".csv", 'names');
-        }
-        if (ConstData::EXE_CHARA_ITEM) {
-            $upload->DeleteSameResult('items', $result_no, $generate_no);
-            $upload->Upload("./output/chara/item_" . $result_no . "_" . $generate_no . ".csv", 'items');
-        }
-        if (ConstData::EXE_CHARA_STATUS) {
-            $upload->DeleteSameResult('statuses', $result_no, $generate_no);
-            $upload->Upload("./output/chara/status_" . $result_no . "_" . $generate_no . ".csv", 'statuses');
-        }
-        if (ConstData::EXE_CHARA_SPEC) {
-            $upload->DeleteSameResult('specs', $result_no, $generate_no);
-            $upload->Upload("./output/chara/spec_" . $result_no . "_" . $generate_no . ".csv", 'specs');
-        }
-        if (ConstData::EXE_CHARA_CONDITION) {
-            $upload->DeleteSameResult('conditions', $result_no, $generate_no);
-            $upload->Upload("./output/chara/condition_" . $result_no . "_" . $generate_no . ".csv", 'conditions');
-        }
-        if(ConstData::EXE_CHARA_REWARD) {
-            $upload->DeleteSameResult('rewards', $result_no, $generate_no);
-            $upload->Upload("./output/chara/reward_" . $result_no . "_" . $generate_no . ".csv", 'rewards');
-        }
-        if(ConstData::EXE_CHARA_REGALIA) {
-            $upload->DeleteSameResult('regalia', $result_no, $generate_no);
-            $upload->Upload("./output/chara/regalia_" . $result_no . "_" . $generate_no . ".csv", 'regalia');
-        }
-        if(ConstData::EXE_CHARA_INTENTION) {
-            $upload->DeleteSameResult('intentions', $result_no, $generate_no);
-            $upload->Upload("./output/chara/intention_" . $result_no . "_" . $generate_no . ".csv", 'intentions');
-        }
-        if(ConstData::EXE_CHARA_PARTNERSHIP) {
-            $upload->DeleteSameResult('partnerships', $result_no, $generate_no);
-            $upload->Upload("./output/chara/partnership_" . $result_no . "_" . $generate_no . ".csv", 'partnerships');
-        }
-        if(ConstData::EXE_CHARA_ASSEMBLY_NUM) {
-            $upload->DeleteSameResult('assembly_nums', $result_no, $generate_no);
-            $upload->Upload("./output/chara/assembly_num_" . $result_no . "_" . $generate_no . ".csv", 'assembly_nums');
-        }
-        
+        &UploadResult($upload, $result_no, $generate_no, ConstData::EXE_CHARA_NAME,         "names",         "./output/chara/name_");
+        &UploadResult($upload, $result_no, $generate_no, ConstData::EXE_CHARA_ITEM,         "items",         "./output/chara/item_");
+        &UploadResult($upload, $result_no, $generate_no, ConstData::EXE_CHARA_STATUS,       "statuses",      "./output/chara/status_");
+        &UploadResult($upload, $result_no, $generate_no, ConstData::EXE_CHARA_SPEC,         "specs",         "./output/chara/spec_");
+        &UploadResult($upload, $result_no, $generate_no, ConstData::EXE_CHARA_CONDITION,    "conditions",    "./output/chara/condition_");
+        &UploadResult($upload, $result_no, $generate_no, ConstData::EXE_CHARA_REWARD,       "rewards",       "./output/chara/reward_");
+        &UploadResult($upload, $result_no, $generate_no, ConstData::EXE_CHARA_REGALIA,      "regalia",       "./output/chara/regalia_");
+        &UploadResult($upload, $result_no, $generate_no, ConstData::EXE_CHARA_INTENTION,    "intentions",    "./output/chara/intention_");
+        &UploadResult($upload, $result_no, $generate_no, ConstData::EXE_CHARA_PARTNERSHIP,  "partnerships",  "./output/chara/partnership_");
+        &UploadResult($upload, $result_no, $generate_no, ConstData::EXE_CHARA_ASSEMBLY_NUM, "assembly_nums", "./output/chara/assembly_num_");
     }
     if (ConstData::EXE_CHARALIST) {
-        if (ConstData::EXE_CHARALIST_NEXT_BATTLE) {
-            $upload->DeleteSameResult('next_battles', $result_no, $generate_no);
-            $upload->Upload("./output/charalist/next_battle_" . $result_no . "_" . $generate_no . ".csv", 'next_battles');
-        }
+        &UploadResult($upload, $result_no, $generate_no, ConstData::EXE_CHARALIST_NEXT_BATTLE, "next_battles", "./output/charalist/next_battle_");
     }
     if (ConstData::EXE_BATTLE) {
-        if(ConstData::EXE_BATTLE_BLOCK) {
-            $upload->DeleteSameResult('blocks', $result_no, $generate_no);
-            $upload->Upload("./output/battle/block_" . $result_no . "_" . $generate_no . ".csv", 'blocks');
-        }
-        if(ConstData::EXE_BATTLE_TRANSITION) {
-            $upload->DeleteSameResult('transitions', $result_no, $generate_no);
-            $upload->Upload("./output/battle/transition_" . $result_no . "_" . $generate_no . ".csv", 'transitions');
-        }
+        &UploadResult($upload, $result_no, $generate_no, ConstData::EXE_BATTLE_BLOCK,      "blocks",      "./output/battle/block_");
+        &UploadResult($upload, $result_no, $generate_no, ConstData::EXE_BATTLE_TRANSITION, "transitions", "./output/battle/transition_");
     }
     print "result_no:$result_no,generate_no:$generate_no\n";
     return;
 }
 
+#-----------------------------------#
+#       結果番号に依らないデータをアップロード
+#-----------------------------------#
+#    引数｜アップロードオブジェクト
+#    　　　アップロード定義
+#          テーブル名
+#          ファイル名
+##-----------------------------------#
+sub UploadData {
+    my ($upload, $is_upload, $table_name, $file_name) = @_;
+
+    if ($is_upload) {
+        $upload->DeleteAll($table_name);
+        $upload->Upload($file_name, $table_name);
+    }
+}
+
+#-----------------------------------#
+#       更新結果データをアップロード
+#-----------------------------------#
+#    引数｜アップロードオブジェクト
+#    　　　更新番号
+#    　　　再更新番号
+#    　　　アップロード定義
+#          テーブル名
+#          ファイル名
+##-----------------------------------#
+sub UploadResult {
+    my ($upload, $result_no, $generate_no, $is_upload, $table_name, $file_name) = @_;
+
+    if($is_upload) {
+        $upload->DeleteSameResult($table_name, $result_no, $generate_no);
+        $upload->Upload($file_name . $result_no . "_" . $generate_no . ".csv", $table_name);
+    }
+}
