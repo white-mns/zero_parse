@@ -131,11 +131,11 @@ sub ParsePage{
     $tree->parse($content);
 
     my $lifelist_table_nodes = &GetNode::GetNode_Tag_Attr("table", "class", "lifelist", \$tree);
-    my $h2_nodes             = &GetNode::GetNode_Tag("h2", \$tree);
+    my $h3_nodes             = &GetNode::GetNode_Tag("h3", \$tree);
 
     # データリスト取得
     if (exists($self->{DataHandlers}{Block}))      {$self->{DataHandlers}{Block}->GetData     ($battle_no, $$lifelist_table_nodes[0])};
-    if (exists($self->{DataHandlers}{Transition})) {$self->{DataHandlers}{Transition}->GetData($battle_no, $h2_nodes)};
+    if (exists($self->{DataHandlers}{Transition})) {$self->{DataHandlers}{Transition}->GetData($battle_no, $h3_nodes)};
 
     $tree = $tree->delete;
 }
