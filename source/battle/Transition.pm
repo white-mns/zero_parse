@@ -73,40 +73,12 @@ sub Init(){
 sub GetData{
     my $self = shift;
     my $battle_no = shift;
-    my $h2_nodes  = shift;
+    my $h3_nodes  = shift;
     
     $self->{BattleNo} = $battle_no;
 
-    $self->ReadH2Nodes($h2_nodes);
+    $self->ReadH3Nodes($h3_nodes);
     
-    return;
-}
-
-#-----------------------------------#
-#    h2データ(ターン数)別にデータ分解
-#------------------------------------
-#    引数｜h2ノード
-#-----------------------------------#
-sub ReadH2Nodes{
-    my $self = shift;
-    my $h2_nodes = shift;
-
-    my $turn  = 0;
-
-    foreach my $h2_node (@$h2_nodes) {
-        if ($h2_node->as_text =~ /第(\d+)ターン/) {
-            $turn = $1;
-        }
-
-        foreach my $node ($h2_node->right) {
-            if ($node =~ /HASH/ && $node->tag eq "h2") {last;}
-
-            if ($node =~ /HASH/ && $node->tag eq "h3") {
-                $self->ReadH3Nodes($node, $turn);
-            }
-        }
-    }
-
     return;
 }
 
@@ -117,23 +89,33 @@ sub ReadH2Nodes{
 #-----------------------------------#
 sub ReadH3Nodes{
     my $self  = shift;
-    my $h3_node = shift;
-    my $turn  = shift;
+    my $h3_nodes = shift;
     
-    my $act  = 0;
-    my $e_no  = 0;
-
-    if ($h3_node->as_text =~ /(\d+)番街(\d+)回目の(?:残像の)*(.+)の城状況!!/) {
-        $act = $2;
-        my $nickname = $3;
-        if (exists($self->{CommonDatas}{NickName}{$nickname})) {
-            $e_no = $self->{CommonDatas}{NickName}{$nickname};
+    foreach my $h3_node (@$h3_nodes) {
+        my $turn = 0;
+        my $act  = 0;
+        my $e_no  = 0;
+        print $h3_node->as_text."\n";
+    
+        if ($h3_node->as_text =~ /(午前|午後)(\d+)時(\d+)分 (\d+)番街(\d+)回目の(?:残像の)*(.+)の城状況!!/) {
+    
+            my $hour = $2;
+            my $minute = $3;
+            if ($1 eq "午後") {
+                $hour += 12;
+            }
+            $turn = "2019-01-01 $hour:$minute:00";
+            $act = $5;
+            my $nickname = $6;
+            if (exists($self->{CommonDatas}{NickName}{$nickname})) {
+                $e_no = $self->{CommonDatas}{NickName}{$nickname};
+            }
         }
+    
+        #if ($e_no == 0) {return;}
+    
+        $self->ReadActNodes($h3_node, $turn, $act, $e_no);
     }
-
-    #if ($e_no == 0) {return;}
-
-    $self->ReadActNodes($h3_node, $turn, $act, $e_no);
 
     return;
 }
