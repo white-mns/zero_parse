@@ -95,7 +95,6 @@ sub ReadH3Nodes{
         my $turn = 0;
         my $act  = 0;
         my $e_no  = 0;
-        print $h3_node->as_text."\n";
     
         if ($h3_node->as_text =~ /(午前|午後)(\d+)時(\d+)分 (\d+)番街(\d+)回目の(?:残像の)*(.+)の城状況!!/) {
     
