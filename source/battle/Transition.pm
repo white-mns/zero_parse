@@ -53,6 +53,7 @@ sub Init(){
                 "block_no",
                 "e_no",
                 "turn",
+                "acted_at",
                 "act",
                 "data_type",
                 "value",
@@ -89,22 +90,22 @@ sub GetData{
 #-----------------------------------#
 sub ReadH3Nodes{
     my $self  = shift;
+    my $turn = 0;
     my $h3_nodes = shift;
     
     foreach my $h3_node (@$h3_nodes) {
-        my $turn = 0;
+        my $acted_at = 0;
         my $act  = 0;
         my $e_no  = 0;
-        print $h3_node->as_text."\n";
-    
-        if ($h3_node->as_text =~ /(午前|午後)(\d+)時(\d+)分 (\d+)番街(\d+)回目の(?:残像の)*(.+)の城状況!!/) {
+
+        if ($h3_node->as_text =~ /(午前|午後)(\d+)時(\d+)分 (\d+)番街(\d+)回目の(?:残像の)*(.+)の侵略!!/) {
     
             my $hour = $2;
             my $minute = $3;
             if ($1 eq "午後") {
                 $hour += 12;
             }
-            $turn = "2019-01-01 $hour:$minute:00";
+            $acted_at = "2019-01-01 $hour:$minute:00";
             $act = $5;
             my $nickname = $6;
             if (exists($self->{CommonDatas}{NickName}{$nickname})) {
@@ -112,9 +113,8 @@ sub ReadH3Nodes{
             }
         }
     
-        #if ($e_no == 0) {return;}
     
-        $self->ReadActNodes($h3_node, $turn, $act, $e_no);
+        $self->ReadActNodes($h3_node, $turn, $acted_at, $act, $e_no);
     }
 
     return;
@@ -129,10 +129,11 @@ sub ReadActNodes{
     my $self  = shift;
     my $start_node = shift;
     my $turn = shift;
+    my $acted_at = shift;
     my $act  = shift;
     my $e_no = shift;
 
-    #if ($e_no == 0) {return;}
+    if ($e_no == 0) {return;}
 
     foreach my $node ($start_node->right) {
         if ($node =~ /HASH/ && ($node->tag eq "h2" || $node->tag eq "h3")) {last;}
@@ -140,12 +141,12 @@ sub ReadActNodes{
         if ($node =~ /HASH/ && $node->tag eq "div" && $node->attr("class") && $node->attr("class") eq "IND") {
             my @children = $node->content_list;
             if (scalar(@children) && $children[0] =~ /HASH/) {
-                $self->ReadActNodes($children[0], $turn, $act, $e_no); # コロッセオ敵側配置の時、再帰で解析
+                $self->ReadActNodes($children[0], $turn, $acted_at, $act, $e_no); # コロッセオ敵側配置の時、再帰で解析
             }
         }
 
         if ($node =~ /HASH/ && $node->tag eq "span") {
-            $self->GetResultTransitionData($node, $turn, $act, $e_no);
+            $self->GetResultTransitionData($node, $turn, $acted_at, $act, $e_no);
         }
     }
 
@@ -161,13 +162,15 @@ sub GetResultTransitionData{
     my $self = shift;
     my $span_node = shift;
     my $turn = shift;
+    my $acted_at = shift;
     my $act  = shift;
     my $e_no = shift;
 
+
     if ($span_node->as_text =~ /戦果：攻撃(\d+\.*\d*)％　支援：(\d+\.*\d*)％　防衛：(\d+\.*\d*)％/) {
-        $self->{Datas}{Data}->AddData(join(ConstData::SPLIT, ($self->{ResultNo}, $self->{GenerateNo},  $self->{BattleNo} + 1, $e_no, $turn, $act, $self->{TypeName}{"攻撃"}, $1)));
-        $self->{Datas}{Data}->AddData(join(ConstData::SPLIT, ($self->{ResultNo}, $self->{GenerateNo},  $self->{BattleNo} + 1, $e_no, $turn, $act, $self->{TypeName}{"支援"}, $2)));
-        $self->{Datas}{Data}->AddData(join(ConstData::SPLIT, ($self->{ResultNo}, $self->{GenerateNo},  $self->{BattleNo} + 1, $e_no, $turn, $act, $self->{TypeName}{"防衛"}, $3)));
+        $self->{Datas}{Data}->AddData(join(ConstData::SPLIT, ($self->{ResultNo}, $self->{GenerateNo},  $self->{BattleNo} + 1, $e_no, $turn, $acted_at, $act, $self->{TypeName}{"攻撃"}, $1)));
+        $self->{Datas}{Data}->AddData(join(ConstData::SPLIT, ($self->{ResultNo}, $self->{GenerateNo},  $self->{BattleNo} + 1, $e_no, $turn, $acted_at, $act, $self->{TypeName}{"支援"}, $2)));
+        $self->{Datas}{Data}->AddData(join(ConstData::SPLIT, ($self->{ResultNo}, $self->{GenerateNo},  $self->{BattleNo} + 1, $e_no, $turn, $acted_at, $act, $self->{TypeName}{"防衛"}, $3)));
     }
 
     return;
