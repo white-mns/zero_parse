@@ -134,9 +134,9 @@ sub GetSpec{
 }
 
 #-----------------------------------#
-#    機体状況データ取得
+#    城状況データ取得
 #------------------------------------
-#    引数｜機体状況ノード
+#    引数｜城状況ノード
 #-----------------------------------#
 sub GetConditionData{
     my $self           = shift;
@@ -153,6 +153,8 @@ sub GetConditionData{
             $condition = $self->{CommonDatas}{ProperName}->GetOrAddId($1);
 
         } else {
+            $text =~ s/^　//;
+            $text =~ s/\s$//;
             $condition = $self->{CommonDatas}{ProperName}->GetOrAddId($text);
         }
         $condition_text .= ($text && $text ne " ") ? "$text," : "";
