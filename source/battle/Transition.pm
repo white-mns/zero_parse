@@ -138,10 +138,11 @@ sub ReadActNodes{
     foreach my $node ($start_node->right) {
         if ($node =~ /HASH/ && ($node->tag eq "h2" || $node->tag eq "h3")) {last;}
 
-        if ($node =~ /HASH/ && $node->tag eq "div" && $node->attr("class") && $node->attr("class") eq "IND") {
+        if ($node =~ /HASH/ && $node->tag eq "div" && $node->attr("class") && ($node->attr("class") eq "IND" || $node->attr("class") eq "MAH")) {
             my @children = $node->content_list;
             if (scalar(@children) && $children[0] =~ /HASH/) {
-                $self->ReadActNodes($children[0], $turn, $acted_at, $act, $e_no); # コロッセオ敵側配置の時、再帰で解析
+                $self->GetResultTransitionData($children[0], $turn, $acted_at, $act, $e_no);
+                $self->ReadActNodes($children[0], $turn, $acted_at, $act, $e_no);
             }
         }
 
