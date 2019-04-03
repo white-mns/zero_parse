@@ -41,6 +41,8 @@ sub Init(){
         "攻撃" => 1,
         "支援" => 2,
         "防衛" => 3,
+        "売上" => 4,
+        "捕虜" => 5,
     };
     
     #初期化
@@ -138,10 +140,11 @@ sub ReadActNodes{
     foreach my $node ($start_node->right) {
         if ($node =~ /HASH/ && ($node->tag eq "h2" || $node->tag eq "h3")) {last;}
 
-        if ($node =~ /HASH/ && $node->tag eq "div" && $node->attr("class") && $node->attr("class") eq "IND") {
+        if ($node =~ /HASH/ && $node->tag eq "div" && $node->attr("class") && ($node->attr("class") eq "IND" || $node->attr("class") eq "MAH")) {
             my @children = $node->content_list;
             if (scalar(@children) && $children[0] =~ /HASH/) {
-                $self->ReadActNodes($children[0], $turn, $acted_at, $act, $e_no); # コロッセオ敵側配置の時、再帰で解析
+                $self->GetResultTransitionData($children[0], $turn, $acted_at, $act, $e_no);
+                $self->ReadActNodes($children[0], $turn, $acted_at, $act, $e_no);
             }
         }
 
@@ -171,6 +174,14 @@ sub GetResultTransitionData{
         $self->{Datas}{Data}->AddData(join(ConstData::SPLIT, ($self->{ResultNo}, $self->{GenerateNo},  $self->{BattleNo} + 1, $e_no, $turn, $acted_at, $act, $self->{TypeName}{"攻撃"}, $1)));
         $self->{Datas}{Data}->AddData(join(ConstData::SPLIT, ($self->{ResultNo}, $self->{GenerateNo},  $self->{BattleNo} + 1, $e_no, $turn, $acted_at, $act, $self->{TypeName}{"支援"}, $2)));
         $self->{Datas}{Data}->AddData(join(ConstData::SPLIT, ($self->{ResultNo}, $self->{GenerateNo},  $self->{BattleNo} + 1, $e_no, $turn, $acted_at, $act, $self->{TypeName}{"防衛"}, $3)));
+    }
+
+    if ($span_node->as_text =~ /売上：(\d+)money/) {
+        $self->{Datas}{Data}->AddData(join(ConstData::SPLIT, ($self->{ResultNo}, $self->{GenerateNo},  $self->{BattleNo} + 1, $e_no, $turn, $acted_at, $act, $self->{TypeName}{"売上"}, $1)));
+    }
+
+    if ($span_node->as_text =~ /捕虜：(\d+)人/) {
+        $self->{Datas}{Data}->AddData(join(ConstData::SPLIT, ($self->{ResultNo}, $self->{GenerateNo},  $self->{BattleNo} + 1, $e_no, $turn, $acted_at, $act, $self->{TypeName}{"捕虜"}, $1)));
     }
 
     return;
